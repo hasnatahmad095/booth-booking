@@ -1,0 +1,246 @@
+/* Container and map */
+.wp-ebb-container {
+    position: relative;
+    max-width: 30%;
+    width: 100%;
+}
+
+.wp-ebb-map {
+    position: relative;
+    width: 100%;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.wp-ebb-map::before {
+    content: '';
+    display: block;
+    padding-top: 0;
+}
+
+/* Booth markers */
+.wp-ebb-booth {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.wp-ebb-booth .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .2);
+    position: relative;
+}
+
+.wp-ebb-booth .label {
+    display: none;
+}
+
+/* Status and type colors */
+.wp-ebb-booth.status-booked .dot {
+    background: #000;
+}
+
+.wp-ebb-booth.status-reserved .dot {
+    background: #999;
+}
+
+.wp-ebb-booth.status-reserved .dot::after {
+    content: "\2713";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -58%);
+    color: #fff;
+    font-size: 10px;
+    line-height: 1;
+}
+
+.wp-ebb-booth.status-available .dot {
+    background: var(--wp-ebb-color, #2271b1);
+}
+
+.wp-ebb-booth.selecting {
+    opacity: .6;
+    pointer-events: none;
+}
+
+.wp-ebb-booth.is-selected .dot {
+    box-shadow: 0 0 0 2px #111, 0 0 0 4px #fff;
+}
+
+.wp-ebb-selection {
+    margin-top: 14px;
+}
+
+.wp-ebb-selection-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.wp-ebb-selection-table th,
+.wp-ebb-selection-table td {
+    padding: 8px 10px;
+    border: 1px solid rgba(0, 0, 0, .12);
+    font-size: 13px;
+}
+
+.wp-ebb-selection-table thead th {
+    background: rgba(0, 0, 0, .04);
+    font-weight: 600;
+}
+
+.wp-ebb-selection-table tbody tr:hover {
+    background: rgba(0, 0, 0, .02);
+}
+
+.wp-ebb-selection-table th:last-child,
+.wp-ebb-selection-table td:last-child {
+    width: 80px;
+    text-align: center;
+}
+
+.wp-ebb-remove-selected {
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #b32d2e;
+}
+
+.wp-ebb-remove-selected:hover {
+    background: rgba(179, 45, 46, .1);
+}
+
+.wp-ebb-add-selected {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    background: #2271b1;
+    border-color: #2271b1;
+    color: #fff;
+}
+
+.wp-ebb-add-selected:hover {
+    background: #1b5f92;
+    border-color: #1b5f92;
+    color: #fff;
+}
+
+.wp-ebb-add-selected:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.wp-ebb-add-selected.selecting {
+    opacity: .7;
+    pointer-events: none;
+}
+
+/* Legend */
+.wp-ebb-legend {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+}
+
+.wp-ebb-legend .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+}
+
+.wp-ebb-legend .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .2);
+}
+
+.legend-not_available {
+    background: #000;
+}
+
+.legend-cp_outside {
+    background: #00a65a;
+}
+
+.legend-f_outside {
+    background: #0073aa;
+}
+
+.legend-front_inner {
+    background: #ff69b4;
+}
+
+.legend-corner_inner {
+    background: #ff8c00;
+}
+
+.legend-central_inner {
+    background: #808080;
+}
+
+.legend-rear_both_wings {
+    background: #ffd700;
+}
+
+/* Tooltip */
+.wp-ebb-tooltip {
+    position: absolute;
+    display: none;
+    background: #111;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 12px;
+    z-index: 10;
+    pointer-events: none;
+    overflow: hidden;
+    min-width: 160px;
+}
+
+.wp-ebb-tooltip .wp-ebb-tooltip-row {
+    padding: 6px 8px;
+    white-space: nowrap;
+}
+
+.wp-ebb-tooltip .wp-ebb-tooltip-row-1 {
+    background: #111;
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+}
+
+.wp-ebb-tooltip .wp-ebb-tooltip-row-2 {
+    color: #fff;
+    text-align: center;
+}
+
+@media screen and (max-width:768px) {
+.wp-ebb-container {
+    max-width: 100%;
+}    
+}
