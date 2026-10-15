@@ -1,5 +1,5 @@
 === Expo Booth Booking ===
-Contributors: brandjaws
+Contributors: hasnatahmad095
 Tags: expo, booth, booking, woocommerce, event
 Requires at least: 5.8
 Tested up to: 6.9
