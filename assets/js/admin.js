@@ -16,7 +16,7 @@
         }
 
         // Image upload functionality (existing)
-        $('#brandjaws_ebb_map_upload, #expo-map-upload').on('click', function(e){
+        $('#hasnat_bb_map_upload').on('click', function(e){
             e.preventDefault();
             if (file_frame) { file_frame.open(); return; }
             file_frame = wp.media.frames.file_frame = wp.media({
@@ -26,25 +26,25 @@
             });
             file_frame.on('select', function(){
                 var attachment = file_frame.state().get('selection').first().toJSON();
-                $('#brandjaws_ebb_map_image_id, #expo-map-image-id').val(attachment.id);
-                $('#brandjaws-ebb-map-preview, #expo-map-preview').attr('src', attachment.url).show();
-                $('#brandjaws_ebb_map_remove, #expo-map-remove').show();
+                $('#hasnat_bb_map_image_id').val(attachment.id);
+                $('#hasnat-bb-map-preview').attr('src', attachment.url).show();
+                $('#hasnat_bb_map_remove').show();
                 initializeVisualEditor();
             });
             file_frame.open();
         });
 
-        $('#brandjaws_ebb_map_remove, #expo-map-remove').on('click', function(){
-            $('#brandjaws_ebb_map_image_id, #expo-map-image-id').val('');
-            $('#brandjaws-ebb-map-preview, #expo-map-preview').attr('src','').hide();
+        $('#hasnat_bb_map_remove').on('click', function(){
+            $('#hasnat_bb_map_image_id').val('');
+            $('#hasnat-bb-map-preview').attr('src','').hide();
             $(this).hide();
             clearVisualEditor();
         });
 
         // Toggle between visual and JSON editor
-        $('#wp-ebb-toggle-editor').on('click', function(){
-            $('#wp-ebb-visual-editor').toggleClass('hidden');
-            var text = $('#wp-ebb-visual-editor').hasClass('hidden') ? 'Show Visual Editor' : 'Hide Visual Editor';
+        $('#hasnat-bb-toggle-editor').on('click', function(){
+            $('#hasnat-bb-visual-editor').toggleClass('hidden');
+            var text = $('#hasnat-bb-visual-editor').hasClass('hidden') ? 'Show Visual Editor' : 'Hide Visual Editor';
             $(this).text(text);
         });
 
@@ -52,7 +52,7 @@
         initializeVisualEditor();
 
         function initializeVisualEditor() {
-            var imageSrc = $('#brandjaws-ebb-map-preview').attr('src') || $('#expo-map-preview').attr('src');
+            var imageSrc = $('#hasnat-bb-map-preview').attr('src');
             if (!imageSrc) {
                 clearVisualEditor();
                 return;
@@ -72,18 +72,18 @@
         }
 
         function clearVisualEditor() {
-            $('#wp-ebb-map-container').empty().addClass('wp-abb-no-image').text('Please upload a map image first to use the visual editor.');
+            $('#hasnat-bb-map-container').empty().addClass('hasnat-bb-no-image').text('Please upload a map image first to use the visual editor.');
             booths = [];
             updateBoothList();
         }
 
         function setupMapContainer() {
-            var container = $('#wp-ebb-map-container');
-            container.removeClass('wp-abb-no-image').empty();
+            var container = $('#hasnat-bb-map-container');
+            container.removeClass('hasnat-bb-no-image').empty();
             
             mapContainer = container;
-            var src = $('#brandjaws-ebb-map-preview').attr('src') || $('#expo-map-preview').attr('src');
-            mapImage = $('<img>').attr('src', src).addClass('wp-ebb-map-image');
+            var src = $('#hasnat-bb-map-preview').attr('src');
+            mapImage = $('<img>').attr('src', src).addClass('hasnat-bb-map-image');
             container.append(mapImage);
             
             // Wait for image to load to get dimensions
@@ -93,11 +93,7 @@
         }
 
         function loadBoothsFromJSON() {
-            var jsonText = $('textarea[name="brandjaws_ebb_booths_json"]').val();
-            if (jsonText === undefined) {
-                jsonText = $('textarea[name="expo_booths_json"]').val();
-            }
-            jsonText = jsonText || '[]';
+            var jsonText = $('textarea[name="hasnat_bb_booths_json"]').val() || '[]';
             try {
                 booths = JSON.parse(jsonText);
                 if (!Array.isArray(booths)) {
@@ -110,19 +106,14 @@
 
         function saveBoothsToJSON() {
             var jsonText = JSON.stringify(booths, null, 2);
-            var $ta = $('textarea[name="brandjaws_ebb_booths_json"]');
-            if ($ta.length) {
-                $ta.val(jsonText);
-            } else {
-                $('textarea[name="expo_booths_json"]').val(jsonText);
-            }
+            $('textarea[name="hasnat_bb_booths_json"]').val(jsonText);
         }
 
         function renderBooths() {
             if (!mapContainer || !mapImage || mapImage.length === 0) return;
             
             // Remove existing booth elements
-            $('.wp-ebb-booth-editor').remove();
+            $('.hasnat-bb-booth-editor').remove();
             
             var containerWidth = mapContainer.width();
             var containerHeight = mapContainer.height();
@@ -133,7 +124,7 @@
                 var boothColor = normalizeHexColor(booth.color);
                 
                 var boothEl = $('<div>')
-                    .addClass('wp-ebb-booth-editor')
+                    .addClass('hasnat-bb-booth-editor')
                     .attr('data-booth-index', index)
                     .css({
                         left: booth.x + '%',
@@ -233,36 +224,36 @@
         }
 
         function updateBoothList() {
-            var listContainer = $('#wp-ebb-booth-list');
+            var listContainer = $('#hasnat-bb-booth-list');
             listContainer.empty();
             
             if (booths.length === 0) {
-                listContainer.append('<div class="wp-ebb-booth-item">No booths added yet</div>');
+                listContainer.append('<div class="hasnat-bb-booth-item">No booths added yet</div>');
                 return;
             }
             
             booths.forEach(function(booth, index) {
-                var item = $('<div>').addClass('wp-ebb-booth-item');
+                var item = $('<div>').addClass('hasnat-bb-booth-item');
                 
-                var info = $('<div>').addClass('wp-ebb-booth-info');
+                var info = $('<div>').addClass('hasnat-bb-booth-info');
                 info.append(
                     $('<span>')
-                        .addClass('wp-ebb-booth-id-display')
+                        .addClass('hasnat-bb-booth-id-display')
                         .text((booth.id || '').toString())
                 );
                 info.append(
                     $('<span>')
-                        .addClass('wp-ebb-booth-position')
+                        .addClass('hasnat-bb-booth-position')
                         .text('X: ' + (booth.x || 0) + '%, Y: ' + (booth.y || 0) + '%')
                 );
                 var typeText = (booth.type_label || booth.type || 'default');
                 info.append(
                     $('<span>')
-                        .addClass('wp-ebb-booth-type')
+                        .addClass('hasnat-bb-booth-type')
                         .text(typeText.toString())
                 );
                 
-                var removeBtn = $('<button>').addClass('wp-ebb-remove-booth').text('Remove').on('click', function() {
+                var removeBtn = $('<button>').addClass('hasnat-bb-remove-booth').text('Remove').on('click', function() {
                     removeBooth(index);
                 });
                 
@@ -279,13 +270,13 @@
         }
 
         // Add new booth functionality
-        $('#wp-ebb-add-booth').on('click', function() {
-            var id = $('#wp-ebb-booth-id').val().trim();
-            var type = $('#wp-ebb-booth-type').val().trim();
-            var typeLabel = $('#wp-ebb-booth-type-label').val().trim();
-            var color = normalizeHexColor($('#wp-ebb-booth-color').val());
-            var productId = $('#wp-ebb-booth-product').val();
-            var price = $('#wp-ebb-booth-price').val();
+        $('#hasnat-bb-add-booth').on('click', function() {
+            var id = $('#hasnat-bb-booth-id').val().trim();
+            var type = $('#hasnat-bb-booth-type').val().trim();
+            var typeLabel = $('#hasnat-bb-booth-type-label').val().trim();
+            var color = normalizeHexColor($('#hasnat-bb-booth-color').val());
+            var productId = $('#hasnat-bb-booth-product').val();
+            var price = $('#hasnat-bb-booth-price').val();
             
             if (!id) {
                 alert('Please enter a booth ID');
@@ -327,11 +318,11 @@
             updateBoothList();
             
             // Clear form
-            $('#wp-ebb-booth-id').val('');
-            $('#wp-ebb-booth-price').val('');
-            $('#wp-ebb-booth-type').val('');
-            $('#wp-ebb-booth-type-label').val('');
-            $('#wp-ebb-booth-color').val('');
+            $('#hasnat-bb-booth-id').val('');
+            $('#hasnat-bb-booth-price').val('');
+            $('#hasnat-bb-booth-type').val('');
+            $('#hasnat-bb-booth-type-label').val('');
+            $('#hasnat-bb-booth-color').val('');
         });
     });
 })(jQuery);

@@ -1,15 +1,15 @@
-.wp-ebb-admin-container {
+.hasnat-bb-admin-container {
     margin-top: 20px;
 }
 
-.wp-ebb-visual-editor {
+.hasnat-bb-visual-editor {
     border: 2px solid #ddd;
     background: #f9f9f9;
     padding: 15px;
     margin-bottom: 20px;
 }
 
-.wp-ebb-map-container {
+.hasnat-bb-map-container {
     position: relative;
     display: inline-block;
     border: 1px solid #ccc;
@@ -18,13 +18,13 @@
     min-height: 200px;
 }
 
-.wp-ebb-map-image {
+.hasnat-bb-map-image {
     display: block;
     max-width: 100%;
     height: auto;
 }
 
-.wp-ebb-booth-editor {
+.hasnat-bb-booth-editor {
     position: absolute;
     width: 30px;
     height: 30px;
@@ -44,24 +44,24 @@
     user-select: none;
 }
 
-.wp-ebb-booth-editor:hover {
+.hasnat-bb-booth-editor:hover {
     transform: scale(1.1);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
     z-index: 20;
 }
 
-.wp-ebb-booth-editor.dragging {
+.hasnat-bb-booth-editor.dragging {
     opacity: 0.7;
     transform: scale(1.2);
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.35);
     z-index: 100;
 }
 
-.wp-ebb-booth-editor .booth-id {
+.hasnat-bb-booth-editor .booth-id {
     pointer-events: none;
 }
 
-.wp-ebb-booth-controls {
+.hasnat-bb-booth-controls {
     margin-top: 15px;
     padding: 10px;
     background: #fff;
@@ -69,7 +69,7 @@
     border-radius: 4px;
 }
 
-.wp-ebb-add-booth-form {
+.hasnat-bb-add-booth-form {
     display: flex;
     gap: 10px;
     align-items: center;
@@ -77,27 +77,27 @@
     flex-wrap: wrap;
 }
 
-.wp-ebb-add-booth-form input {
+.hasnat-bb-add-booth-form input {
     padding: 6px 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
 }
 
-.wp-ebb-add-booth-form input[type="text"] {
+.hasnat-bb-add-booth-form input[type="text"] {
     width: 80px;
 }
 
-.wp-ebb-add-booth-form input[type="number"] {
+.hasnat-bb-add-booth-form input[type="number"] {
     width: 100px;
 }
 
-.wp-ebb-add-booth-form select {
+.hasnat-bb-add-booth-form select {
     padding: 6px 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
 }
 
-.wp-ebb-booth-list {
+.hasnat-bb-booth-list {
     max-height: 200px;
     overflow-y: auto;
     border: 1px solid #ddd;
@@ -105,7 +105,7 @@
     background: #fff;
 }
 
-.wp-ebb-booth-item {
+.hasnat-bb-booth-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -113,38 +113,38 @@
     border-bottom: 1px solid #eee;
 }
 
-.wp-ebb-booth-item:last-child {
+.hasnat-bb-booth-item:last-child {
     border-bottom: none;
 }
 
-.wp-ebb-booth-item:hover {
+.hasnat-bb-booth-item:hover {
     background: #f5f5f5;
 }
 
-.wp-ebb-booth-info {
+.hasnat-bb-booth-info {
     display: flex;
     gap: 15px;
     align-items: center;
     font-size: 12px;
 }
 
-.wp-ebb-booth-id-display {
+.hasnat-bb-booth-id-display {
     font-weight: bold;
     color: #333;
 }
 
-.wp-ebb-booth-position {
+.hasnat-bb-booth-position {
     color: #666;
 }
 
-.wp-ebb-booth-type {
+.hasnat-bb-booth-type {
     background: #e7e7e7;
     padding: 2px 6px;
     border-radius: 3px;
     font-size: 11px;
 }
 
-.wp-ebb-remove-booth {
+.hasnat-bb-remove-booth {
     background: #dc3545;
     color: #fff;
     border: none;
@@ -154,11 +154,11 @@
     font-size: 11px;
 }
 
-.wp-ebb-remove-booth:hover {
+.hasnat-bb-remove-booth:hover {
     background: #c82333;
 }
 
-.wp-ebb-toggle-editor {
+.hasnat-bb-toggle-editor {
     background: #0073aa;
     color: #fff;
     border: none;
@@ -168,19 +168,19 @@
     margin-bottom: 15px;
 }
 
-.wp-ebb-toggle-editor:hover {
+.hasnat-bb-toggle-editor:hover {
     background: #005a87;
 }
 
-.wp-ebb-visual-editor.hidden {
+.hasnat-bb-visual-editor.hidden {
     display: none;
 }
 
-.wp-ebb-json-editor {
+.hasnat-bb-json-editor {
     margin-top: 20px;
 }
 
-.wp-abb-no-image {
+.hasnat-bb-no-image {
     padding: 40px;
     text-align: center;
     background: #f9f9f9;

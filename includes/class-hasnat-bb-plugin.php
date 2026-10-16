@@ -1,18 +1,18 @@
 <?php
-namespace BrandJaws\ExpoBoothBooking;
+namespace Hasnat\BoothBooking;
 
 if (!defined('ABSPATH')) { exit; }
 
-class BrandJaws_EBB_Plugin {
+class Hasnat_BB_Plugin {
     public static function init() : void {
         // CPT and admin UI
-        BrandJaws_EBB_CPT::init();
+        Hasnat_BB_CPT::init();
 
         // Frontend shortcode and assets
-        BrandJaws_EBB_Shortcode::init();
+        Hasnat_BB_Shortcode::init();
 
         // WooCommerce integration
-        BrandJaws_EBB_Woo::init();
+        Hasnat_BB_Woo::init();
 
         // Elementor widget is loaded conditionally from main file
     }

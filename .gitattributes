@@ -1,0 +1,12 @@
+# Normalize line endings
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+
+# Exclude development files from `git archive` release zips
+/.github            export-ignore
+/.wordpress-org     export-ignore
+/.gitattributes     export-ignore
+/.gitignore         export-ignore
+/.distignore        export-ignore
+/README.md          export-ignore

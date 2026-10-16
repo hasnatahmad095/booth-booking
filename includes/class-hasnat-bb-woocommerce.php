@@ -1,16 +1,16 @@
 <?php
-namespace BrandJaws\ExpoBoothBooking;
+namespace Hasnat\BoothBooking;
 
 if (!defined('ABSPATH')) { exit; }
 
-class BrandJaws_EBB_Woo {
-    const NONCE_ACTION = 'brandjaws_ebb_nonce';
+class Hasnat_BB_Woo {
+    const NONCE_ACTION = 'hasnat_bb_nonce';
 
-    const CART_KEY_MAP_ID = 'brandjaws_ebb_map_id';
-    const CART_KEY_BOOTH_ID = 'brandjaws_ebb_booth_id';
+    const CART_KEY_MAP_ID = 'hasnat_bb_map_id';
+    const CART_KEY_BOOTH_ID = 'hasnat_bb_booth_id';
 
     private static function reg_field_key(string $cart_item_key, string $field) : string {
-        return 'brandjaws_ebb_reg_' . $cart_item_key . '_' . $field;
+        return 'hasnat_bb_reg_' . $cart_item_key . '_' . $field;
     }
 
     private static function get_item_map_id(array $item) : int {
@@ -34,16 +34,16 @@ class BrandJaws_EBB_Woo {
     private static function add_booth_booking(int $map_id, string $booth_id) : void {
         if (!$map_id || $booth_id === '') return;
 
-        $key = BrandJaws_EBB_Shortcode::booked_meta_key();
+        $key = Hasnat_BB_Shortcode::booked_meta_key();
         $existing = get_post_meta($map_id, $key, true);
         if (!is_array($existing)) $existing = [];
 
-        $norm = BrandJaws_EBB_Shortcode::normalize_booth_id($booth_id);
+        $norm = Hasnat_BB_Shortcode::normalize_booth_id($booth_id);
         if ($norm === '') return;
 
         foreach ($existing as $v) {
             $v = is_scalar($v) ? (string) $v : '';
-            if (BrandJaws_EBB_Shortcode::normalize_booth_id($v) === $norm) return;
+            if (Hasnat_BB_Shortcode::normalize_booth_id($v) === $norm) return;
         }
 
         $existing[] = $norm;
@@ -53,29 +53,29 @@ class BrandJaws_EBB_Woo {
     private static function remove_booth_booking(int $map_id, string $booth_id) : void {
         if (!$map_id || $booth_id === '') return;
 
-        $key = BrandJaws_EBB_Shortcode::booked_meta_key();
+        $key = Hasnat_BB_Shortcode::booked_meta_key();
         $existing = get_post_meta($map_id, $key, true);
         if (!is_array($existing) || empty($existing)) return;
 
-        $norm = BrandJaws_EBB_Shortcode::normalize_booth_id($booth_id);
+        $norm = Hasnat_BB_Shortcode::normalize_booth_id($booth_id);
         if ($norm === '') return;
 
         $next = [];
         foreach ($existing as $v) {
             $v = is_scalar($v) ? (string) $v : '';
-            if (BrandJaws_EBB_Shortcode::normalize_booth_id($v) !== $norm) {
-                $next[] = BrandJaws_EBB_Shortcode::normalize_booth_id($v);
+            if (Hasnat_BB_Shortcode::normalize_booth_id($v) !== $norm) {
+                $next[] = Hasnat_BB_Shortcode::normalize_booth_id($v);
             }
         }
         update_post_meta($map_id, $key, $next);
     }
 
     public static function init() : void {
-        add_action('wp_ajax_brandjaws_ebb_add_to_cart', [__CLASS__, 'ajax_add_to_cart']);
-        add_action('wp_ajax_nopriv_brandjaws_ebb_add_to_cart', [__CLASS__, 'ajax_add_to_cart']);
+        add_action('wp_ajax_hasnat_bb_add_to_cart', [__CLASS__, 'ajax_add_to_cart']);
+        add_action('wp_ajax_nopriv_hasnat_bb_add_to_cart', [__CLASS__, 'ajax_add_to_cart']);
 
-        add_action('wp_ajax_brandjaws_ebb_add_selected_to_cart', [__CLASS__, 'ajax_add_selected_to_cart']);
-        add_action('wp_ajax_nopriv_brandjaws_ebb_add_selected_to_cart', [__CLASS__, 'ajax_add_selected_to_cart']);
+        add_action('wp_ajax_hasnat_bb_add_selected_to_cart', [__CLASS__, 'ajax_add_selected_to_cart']);
+        add_action('wp_ajax_nopriv_hasnat_bb_add_selected_to_cart', [__CLASS__, 'ajax_add_selected_to_cart']);
 
         add_action('wp_loaded', [__CLASS__, 'refresh_cart_reservations']);
 
@@ -102,9 +102,9 @@ class BrandJaws_EBB_Woo {
             $booth_id = self::get_item_booth_id(is_array($item) ? $item : []);
             if ($booth_id === '') continue;
 
-            echo '<div class="brandjaws-ebb-registration-fields">';
+            echo '<div class="hasnat-bb-registration-fields">';
             /* translators: 1: booth id */
-            echo '<h3>' . esc_html(sprintf(__('Registration %s', 'expo-booth-booking'), $booth_id)) . '</h3>';
+            echo '<h3>' . esc_html(sprintf(__('Registration %s', 'booth-booking'), $booth_id)) . '</h3>';
 
             $full_name_key = self::reg_field_key((string) $cart_item_key, 'full_name');
             $email_key = self::reg_field_key((string) $cart_item_key, 'email');
@@ -114,7 +114,7 @@ class BrandJaws_EBB_Woo {
                 [
                     'type' => 'text',
                     'class' => ['form-row-first'],
-                    'label' => __('Full Name', 'expo-booth-booking'),
+                    'label' => __('Full Name', 'booth-booking'),
                     'required' => true,
                 ],
                 $checkout->get_value($full_name_key)
@@ -125,7 +125,7 @@ class BrandJaws_EBB_Woo {
                 [
                     'type' => 'email',
                     'class' => ['form-row-last'],
-                    'label' => __('Email', 'expo-booth-booking'),
+                    'label' => __('Email', 'booth-booking'),
                     'required' => true,
                 ],
                 $checkout->get_value($email_key)
@@ -160,11 +160,11 @@ class BrandJaws_EBB_Woo {
 
             if ($full_name === '') {
                 /* translators: 1: booth id */
-                wc_add_notice(sprintf(__('Please enter Full Name for Registration %s.', 'expo-booth-booking'), $booth_id), 'error');
+                wc_add_notice(sprintf(__('Please enter Full Name for Registration %s.', 'booth-booking'), $booth_id), 'error');
             }
             if ($email === '' || !is_email($email)) {
                 /* translators: 1: booth id */
-                wc_add_notice(sprintf(__('Please enter a valid Email for Registration %s.', 'expo-booth-booking'), $booth_id), 'error');
+                wc_add_notice(sprintf(__('Please enter a valid Email for Registration %s.', 'booth-booking'), $booth_id), 'error');
             }
         }
     }
@@ -177,7 +177,7 @@ class BrandJaws_EBB_Woo {
             $map_id = self::get_item_map_id(is_array($item) ? $item : []);
             $booth_id = self::get_item_booth_id(is_array($item) ? $item : []);
             if ($map_id && $booth_id) {
-                set_transient(BrandJaws_EBB_Shortcode::reserve_key($map_id, $booth_id), 1, 10 * MINUTE_IN_SECONDS);
+                set_transient(Hasnat_BB_Shortcode::reserve_key($map_id, $booth_id), 1, 10 * MINUTE_IN_SECONDS);
             }
         }
     }
@@ -186,11 +186,11 @@ class BrandJaws_EBB_Woo {
         $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
         $nonce_ok = $nonce && wp_verify_nonce($nonce, self::NONCE_ACTION);
         if (!$nonce_ok) {
-            wp_send_json_error(['message' => __('Invalid nonce', 'expo-booth-booking')]);
+            wp_send_json_error(['message' => __('Invalid nonce', 'booth-booking')]);
         }
 
-        if (!function_exists('WC')) wp_send_json_error(['message' => __('WooCommerce not available', 'expo-booth-booking')]);
-        if (!WC()->cart) wp_send_json_error(['message' => __('Cart not available', 'expo-booth-booking')]);
+        if (!function_exists('WC')) wp_send_json_error(['message' => __('WooCommerce not available', 'booth-booking')]);
+        if (!WC()->cart) wp_send_json_error(['message' => __('Cart not available', 'booth-booking')]);
 
         $map_id = isset($_POST['map_id']) ? absint(wp_unslash($_POST['map_id'])) : 0;
 
@@ -207,7 +207,7 @@ class BrandJaws_EBB_Woo {
         }
 
         if (!$map_id || empty($booths)) {
-            wp_send_json_error(['message' => __('Invalid data', 'expo-booth-booking')]);
+            wp_send_json_error(['message' => __('Invalid data', 'booth-booking')]);
         }
 
         $added_any = false;
@@ -216,21 +216,21 @@ class BrandJaws_EBB_Woo {
         foreach ($booths as $row) {
             $product_id = isset($row['product_id']) ? absint($row['product_id']) : 0;
             $booth_id = isset($row['booth_id']) ? sanitize_text_field($row['booth_id']) : '';
-            $booth_id = BrandJaws_EBB_Shortcode::normalize_booth_id($booth_id);
+            $booth_id = Hasnat_BB_Shortcode::normalize_booth_id($booth_id);
 
             if (!$product_id || $booth_id === '') continue;
 
-            $status = BrandJaws_EBB_Shortcode::booth_status($product_id, $map_id, $booth_id);
+            $status = Hasnat_BB_Shortcode::booth_status($product_id, $map_id, $booth_id);
             if ($status !== 'available') {
                 $errors[] = sprintf(
                     /* translators: 1: booth id */
-                    __('Booth %s not available', 'expo-booth-booking'),
+                    __('Booth %s not available', 'booth-booking'),
                     $booth_id
                 );
                 continue;
             }
 
-            set_transient(BrandJaws_EBB_Shortcode::reserve_key($map_id, $booth_id), 1, 10 * MINUTE_IN_SECONDS);
+            set_transient(Hasnat_BB_Shortcode::reserve_key($map_id, $booth_id), 1, 10 * MINUTE_IN_SECONDS);
 
             $added = WC()->cart->add_to_cart($product_id, 1, 0, [], [
                 self::CART_KEY_MAP_ID => $map_id,
@@ -240,23 +240,23 @@ class BrandJaws_EBB_Woo {
             if ($added) {
                 $added_any = true;
             } else {
-                delete_transient(BrandJaws_EBB_Shortcode::reserve_key($map_id, $booth_id));
+                delete_transient(Hasnat_BB_Shortcode::reserve_key($map_id, $booth_id));
                 $errors[] = sprintf(
                     /* translators: 1: booth id */
-                    __('Could not add booth %s to cart', 'expo-booth-booking'),
+                    __('Could not add booth %s to cart', 'booth-booking'),
                     $booth_id
                 );
             }
         }
 
         if (!$added_any) {
-            wp_send_json_error(['message' => !empty($errors) ? implode("\n", $errors) : __('Could not add to cart', 'expo-booth-booking')]);
+            wp_send_json_error(['message' => !empty($errors) ? implode("\n", $errors) : __('Could not add to cart', 'booth-booking')]);
         }
 
         // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
         $fragments = apply_filters('woocommerce_add_to_cart_fragments', []);
         wp_send_json_success([
-            'message' => __('Added to cart', 'expo-booth-booking'),
+            'message' => __('Added to cart', 'booth-booking'),
             'fragments' => $fragments,
             'cart_hash' => WC()->cart->get_cart_hash(),
             'warnings' => $errors,
@@ -267,27 +267,27 @@ class BrandJaws_EBB_Woo {
         $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
         $nonce_ok = $nonce && wp_verify_nonce($nonce, self::NONCE_ACTION);
         if (!$nonce_ok) {
-            wp_send_json_error(['message' => __('Invalid nonce', 'expo-booth-booking')]);
+            wp_send_json_error(['message' => __('Invalid nonce', 'booth-booking')]);
         }
 
-        if (!function_exists('WC')) wp_send_json_error(['message' => __('WooCommerce not available', 'expo-booth-booking')]);
-        if (!WC()->cart) wp_send_json_error(['message' => __('Cart not available', 'expo-booth-booking')]);
+        if (!function_exists('WC')) wp_send_json_error(['message' => __('WooCommerce not available', 'booth-booking')]);
+        if (!WC()->cart) wp_send_json_error(['message' => __('Cart not available', 'booth-booking')]);
 
         $product_id = isset($_POST['product_id']) ? absint(wp_unslash($_POST['product_id'])) : 0;
         $map_id = isset($_POST['map_id']) ? absint(wp_unslash($_POST['map_id'])) : 0;
         $booth_id = isset($_POST['booth_id']) ? sanitize_text_field(wp_unslash($_POST['booth_id'])) : '';
         if (!$product_id || !$map_id || !$booth_id) {
-            wp_send_json_error(['message' => __('Invalid data', 'expo-booth-booking')]);
+            wp_send_json_error(['message' => __('Invalid data', 'booth-booking')]);
         }
 
         // Check stock and existing reservation
-        $status = BrandJaws_EBB_Shortcode::booth_status($product_id, $map_id, $booth_id);
+        $status = Hasnat_BB_Shortcode::booth_status($product_id, $map_id, $booth_id);
         if ($status !== 'available') {
-            wp_send_json_error(['message' => __('Booth not available', 'expo-booth-booking'), 'status' => $status]);
+            wp_send_json_error(['message' => __('Booth not available', 'booth-booking'), 'status' => $status]);
         }
 
         // Reserve for 10 minutes
-        set_transient(BrandJaws_EBB_Shortcode::reserve_key($map_id, $booth_id), 1, 10 * MINUTE_IN_SECONDS);
+        set_transient(Hasnat_BB_Shortcode::reserve_key($map_id, $booth_id), 1, 10 * MINUTE_IN_SECONDS);
 
         $added = WC()->cart->add_to_cart($product_id, 1, 0, [], [
             self::CART_KEY_MAP_ID => $map_id,
@@ -299,13 +299,13 @@ class BrandJaws_EBB_Woo {
             // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
             $fragments = apply_filters('woocommerce_add_to_cart_fragments', []);
             wp_send_json_success([
-                'message' => __('Added to cart', 'expo-booth-booking'),
+                'message' => __('Added to cart', 'booth-booking'),
                 'fragments' => $fragments,
                 'cart_hash' => WC()->cart->get_cart_hash(),
             ]);
         } else {
-            delete_transient(BrandJaws_EBB_Shortcode::reserve_key($map_id, $booth_id));
-            wp_send_json_error(['message' => __('Could not add to cart', 'expo-booth-booking')]);
+            delete_transient(Hasnat_BB_Shortcode::reserve_key($map_id, $booth_id));
+            wp_send_json_error(['message' => __('Could not add to cart', 'booth-booking')]);
         }
     }
 
@@ -327,10 +327,10 @@ class BrandJaws_EBB_Woo {
             return $cart_item_data;
         }
         if ($map_id && $booth_id) {
-            $status = BrandJaws_EBB_Shortcode::booth_status((int) $product_id, (int) $map_id, (string) $booth_id);
+            $status = Hasnat_BB_Shortcode::booth_status((int) $product_id, (int) $map_id, (string) $booth_id);
             if ($status !== 'available') {
                 if (function_exists('wc_add_notice')) {
-                    wc_add_notice(__('Booth not available', 'expo-booth-booking'), 'error');
+                    wc_add_notice(__('Booth not available', 'booth-booking'), 'error');
                 }
                 return $cart_item_data;
             }
@@ -346,7 +346,7 @@ class BrandJaws_EBB_Woo {
         $map_id = self::get_item_map_id(is_array($item) ? $item : []);
         $booth_id = self::get_item_booth_id(is_array($item) ? $item : []);
         if ($map_id && $booth_id) {
-            delete_transient(BrandJaws_EBB_Shortcode::reserve_key($map_id, $booth_id));
+            delete_transient(Hasnat_BB_Shortcode::reserve_key($map_id, $booth_id));
         }
     }
 
@@ -375,10 +375,10 @@ class BrandJaws_EBB_Woo {
         $email = isset($_POST[$email_key]) ? sanitize_email(wp_unslash($_POST[$email_key])) : '';
 
         if ($full_name !== '') {
-            $item->add_meta_data(__('Full Name', 'expo-booth-booking'), $full_name, true);
+            $item->add_meta_data(__('Full Name', 'booth-booking'), $full_name, true);
         }
         if ($email !== '') {
-            $item->add_meta_data(__('Email', 'expo-booth-booking'), $email, true);
+            $item->add_meta_data(__('Email', 'booth-booking'), $email, true);
         }
     }
 
@@ -393,7 +393,7 @@ class BrandJaws_EBB_Woo {
                 } elseif (self::should_release_from_status((string) $new_status)) {
                     self::remove_booth_booking($map_id, $booth_id);
                 }
-                delete_transient(BrandJaws_EBB_Shortcode::reserve_key($map_id, $booth_id));
+                delete_transient(Hasnat_BB_Shortcode::reserve_key($map_id, $booth_id));
             }
         }
     }

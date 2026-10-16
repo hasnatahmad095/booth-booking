@@ -1,12 +1,12 @@
 <?php
-namespace BrandJaws\ExpoBoothBooking;
+namespace Hasnat\BoothBooking;
 
 if (!defined('ABSPATH')) { exit; }
 
-class BrandJaws_EBB_Shortcode {
-    const NONCE_ACTION = 'brandjaws_ebb_nonce';
-    const SHORTCODE = 'brandjaws_ebb_booth_map';
-    const SCRIPT_HANDLE = 'brandjaws-ebb-frontend';
+class Hasnat_BB_Shortcode {
+    const NONCE_ACTION = 'hasnat_bb_nonce';
+    const SHORTCODE = 'hasnat_bb_booth_map';
+    const SCRIPT_HANDLE = 'hasnat-bb-frontend';
 
     public static function init() : void {
         add_shortcode(self::SHORTCODE, [__CLASS__, 'render_shortcode']);
@@ -14,7 +14,7 @@ class BrandJaws_EBB_Shortcode {
     }
 
     public static function booked_meta_key() : string {
-        return '_brandjaws_ebb_booked_booths';
+        return '_hasnat_bb_booked_booths';
     }
 
     public static function normalize_booth_id(string $booth_id) : string {
@@ -44,7 +44,7 @@ class BrandJaws_EBB_Shortcode {
         $norm = self::normalize_booth_id($booth_id);
         if ($norm === '') return false;
 
-        $json = (string) get_post_meta($map_id, BrandJaws_EBB_CPT::META_BOOTHS_JSON, true);
+        $json = (string) get_post_meta($map_id, Hasnat_BB_CPT::META_BOOTHS_JSON, true);
         if ($json === '') return false;
 
         $booths = json_decode($json, true);
@@ -68,13 +68,13 @@ class BrandJaws_EBB_Shortcode {
     }
 
     public static function register_assets() : void {
-        wp_register_style(self::SCRIPT_HANDLE, BRANDJAWS_EBB_PLUGIN_URL . 'assets/css/frontend.css', [], BRANDJAWS_EBB_VERSION);
-        wp_register_script(self::SCRIPT_HANDLE, BRANDJAWS_EBB_PLUGIN_URL . 'assets/js/frontend.js', ['jquery'], BRANDJAWS_EBB_VERSION, true);
+        wp_register_style(self::SCRIPT_HANDLE, HASNAT_BB_PLUGIN_URL . 'assets/css/frontend.css', [], HASNAT_BB_VERSION);
+        wp_register_script(self::SCRIPT_HANDLE, HASNAT_BB_PLUGIN_URL . 'assets/js/frontend.js', ['jquery'], HASNAT_BB_VERSION, true);
         $cart_url = '';
         if (function_exists('wc_get_cart_url')) {
             $cart_url = wc_get_cart_url();
         }
-        wp_localize_script(self::SCRIPT_HANDLE, 'BRANDJAWS_EBB', [
+        wp_localize_script(self::SCRIPT_HANDLE, 'HASNAT_BB', [
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce(self::NONCE_ACTION),
             'cart_url' => $cart_url,
@@ -87,20 +87,14 @@ class BrandJaws_EBB_Shortcode {
         $post_id = absint($atts['id']);
         if (!$post_id) return '';
 
-        $image_id = (int) get_post_meta($post_id, BrandJaws_EBB_CPT::META_IMAGE_ID, true);
-        if (!$image_id) {
-            $image_id = (int) get_post_meta($post_id, BrandJaws_EBB_CPT::LEGACY_META_IMAGE_ID, true);
-        }
+        $image_id = (int) get_post_meta($post_id, Hasnat_BB_CPT::META_IMAGE_ID, true);
         $image_url = $image_id ? wp_get_attachment_image_url($image_id, 'full') : '';
         $image_full = $image_id ? wp_get_attachment_image_src($image_id, 'full') : false;
         $ratio_percent = 56;
         if ($image_full && is_array($image_full) && !empty($image_full[1]) && !empty($image_full[2]) && $image_full[1] > 0) {
             $ratio_percent = ($image_full[2] / $image_full[1]) * 100;
         }
-        $json = (string) get_post_meta($post_id, BrandJaws_EBB_CPT::META_BOOTHS_JSON, true);
-        if ($json === '') {
-            $json = (string) get_post_meta($post_id, BrandJaws_EBB_CPT::LEGACY_META_BOOTHS_JSON, true);
-        }
+        $json = (string) get_post_meta($post_id, Hasnat_BB_CPT::META_BOOTHS_JSON, true);
         $booths = json_decode($json, true);
         if (!$image_url || !is_array($booths)) return '';
 
@@ -131,9 +125,9 @@ class BrandJaws_EBB_Shortcode {
 
         ob_start();
         ?>
-        <div class="wp-ebb-container" data-map-id="<?php echo esc_attr($post_id); ?>">
+        <div class="hasnat-bb-container" data-map-id="<?php echo esc_attr($post_id); ?>">
             
-            <div class="wp-ebb-map" style="background-image:url('<?php echo esc_url($image_url); ?>'); ">
+            <div class="hasnat-bb-map" style="background-image:url('<?php echo esc_url($image_url); ?>'); ">
                 <?php foreach ($booths as $booth) :
                     $id = isset($booth['id']) ? (string) $booth['id'] : '';
                     $x = isset($booth['x']) ? floatval($booth['x']) : 0;
@@ -157,10 +151,10 @@ class BrandJaws_EBB_Shortcode {
                     if ($type_label === '') $type_label = $type;
 
                     $status = self::booth_status($product_id, $post_id, $id);
-                    $classes = 'wp-ebb-booth status-' . $status;
+                    $classes = 'hasnat-bb-booth status-' . $status;
                     $style = 'left:' . $x . '%; top:' . $y . '%;';
                     if ($color !== '') {
-                        $style .= ' --wp-ebb-color:' . $color . ';';
+                        $style .= ' --hasnat-bb-color:' . $color . ';';
                     }
                     ?>
                     <div class="<?php echo esc_attr($classes); ?>"
@@ -180,29 +174,29 @@ class BrandJaws_EBB_Shortcode {
                 <?php endforeach; ?>
             </div>
 
-            <div class="wp-ebb-selection">
-                <table class="wp-ebb-selection-table">
+            <div class="hasnat-bb-selection">
+                <table class="hasnat-bb-selection-table">
                     <thead>
                         <tr>
-                            <th><?php echo esc_html__('Booth', 'expo-booth-booking'); ?></th>
-                            <th><?php echo esc_html__('Price', 'expo-booth-booking'); ?></th>
-                            <th><?php echo esc_html__('Remove', 'expo-booth-booking'); ?></th>
+                            <th><?php echo esc_html__('Booth', 'booth-booking'); ?></th>
+                            <th><?php echo esc_html__('Price', 'booth-booking'); ?></th>
+                            <th><?php echo esc_html__('Remove', 'booth-booking'); ?></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
-                <button type="button" class="wp-ebb-add-selected button" disabled>
-                    <?php echo esc_html__('Add to Cart', 'expo-booth-booking'); ?>
+                <button type="button" class="hasnat-bb-add-selected button" disabled>
+                    <?php echo esc_html__('Add to Cart', 'booth-booking'); ?>
                 </button>
             </div>
-            <div class="wp-ebb-legend">
+            <div class="hasnat-bb-legend">
                 <?php foreach ($legend as $key => $row):
                     $legend_color = !empty($row['color']) ? (string) $row['color'] : '';
                     ?>
                     <div class="legend-item"><span class="legend-dot" style="background:<?php echo esc_attr($legend_color); ?>"></span> <?php echo esc_html($row['label']); ?></div>
                 <?php endforeach; ?>
             </div>
-            <div class="wp-ebb-tooltip" role="tooltip" aria-hidden="true"></div>
+            <div class="hasnat-bb-tooltip" role="tooltip" aria-hidden="true"></div>
         </div>
         <?php
         return ob_get_clean();
@@ -229,6 +223,6 @@ class BrandJaws_EBB_Shortcode {
     }
 
     public static function reserve_key(int $map_id, string $booth_id) : string {
-        return 'brandjaws_ebb_reserve_' . $map_id . '_' . self::normalize_booth_id($booth_id);
+        return 'hasnat_bb_reserve_' . $map_id . '_' . self::normalize_booth_id($booth_id);
     }
 }

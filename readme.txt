@@ -1,10 +1,10 @@
-=== Expo Booth Booking ===
+=== Booth Booking ===
 Contributors: hasnatahmad095
 Tags: expo, booth, booking, woocommerce, event
 Requires at least: 5.8
-Tested up to: 6.9
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.1.3
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Interactive expo booth booking with clickable floor map and WooCommerce integrat
 
 == Description ==
 
-Expo Booth Booking allows event organizers to sell exhibition booths visually using an interactive floor map instead of a traditional product list.
+Booth Booking allows event organizers to sell exhibition booths visually using an interactive floor map instead of a traditional product list.
 
 Upload your expo layout image, place clickable booths anywhere on the map, link them to WooCommerce products, and let exhibitors reserve and purchase booths directly from the layout.
 
@@ -38,7 +38,7 @@ Perfect for:
    - admin_booked (optional manual booking control)
 4. Link each booth to a WooCommerce product.
 5. Display the map using:
-   - Shortcode: [brandjaws_ebb_booth_map id="123"]
+   - Shortcode: [hasnat_bb_booth_map id="123"]
    - Elementor widget
 
 Users click a booth → enter details → booth becomes reserved → product is added to cart via AJAX → checkout is completed through WooCommerce.
@@ -113,6 +113,7 @@ When admin_booked is set to true:
 - Clean architecture
 - Easy to extend
 - Ready for future enhancements
+- Source code on GitHub: https://github.com/hasnatahmad095/booth-booking
 
 = Benefits for Event Organizers =
 
@@ -142,14 +143,14 @@ When admin_booked is set to true:
 = Automatic Installation =
 
 1. Go to Plugins → Add New
-2. Search for "Expo Booth Booking"
+2. Search for "Booth Booking"
 3. Click Install Now
 4. Activate the plugin
 5. Ensure WooCommerce is active
 
 = Manual Installation =
 
-1. Upload the expo-booth-booking folder to:
+1. Upload the booth-booking folder to:
    /wp-content/plugins/
 2. Activate via WordPress Admin → Plugins
 3. Create your first Expo Map
@@ -210,27 +211,18 @@ It is strongly recommended to use Simple Products with stock quantity set to 1 f
 
 == Screenshots ==
 
-1. Expo Map editor screen (upload floor image and configure booths)
-2. JSON booth configuration example (including admin_booked usage)
-3. Frontend interactive booth map with available booths
-4. Booth selected with Full Name and Email fields
-5. WooCommerce cart showing booth with exhibitor details
-6. WooCommerce order screen displaying booth owner info
-7. Elementor widget settings panel
+1. Expo Map editor with the visual booth editor and booth list
+2. Frontend interactive booth map with legend
+3. Booths selected and ready to add to cart
 
 == Changelog ==
 
-= 0.1.3 =
-* Updated tags and short description
-
-= 0.1.2 =
-* Added admin manual booking control (admin_booked)
-* Added exhibitor Full Name and Email collection
-* Improved reservation handling
-* Enhanced documentation
-
-= 0.1.1 =
-* Updated assets
-
-= 0.1.0 =
+= 1.0.0 =
 * Initial release
+* Interactive floor map with clickable booths
+* Visual drag-and-drop booth editor
+* WooCommerce cart, checkout and stock integration
+* Temporary reservation system
+* Admin manual booking control (admin_booked)
+* Exhibitor Full Name and Email collection
+* Elementor widget
